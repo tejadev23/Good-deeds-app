@@ -1,7 +1,8 @@
 "use client";
 
+import { Suspense } from "react";
 import Link from "next/link";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { GhostLinear } from "solar-icon-set";
 
 import { BackButton } from "@/components/common/BackButton";
@@ -18,8 +19,8 @@ import { useComments } from "@/hooks/useComments";
 import { useUsersById } from "@/hooks/useUsersById";
 import { useDeedStore } from "@/store/deedStore";
 
-export default function DeedDetailPage() {
-  const { id } = useParams<{ id: string }>();
+function DeedDetail() {
+  const id = useSearchParams().get("id") ?? "";
   const router = useRouter();
   const deed = useDeedStore((s) => s.deeds.find((d) => d.id === id));
   const status = useDeedStore((s) => s.status);
@@ -76,5 +77,13 @@ export default function DeedDetailPage() {
         </CardContent>
       </Card>
     </div>
+  );
+}
+
+export default function Page() {
+  return (
+    <Suspense>
+      <DeedDetail />
+    </Suspense>
   );
 }

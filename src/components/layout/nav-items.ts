@@ -22,6 +22,10 @@ export const NAV_ITEMS: NavItem[] = [
   { key: "profile", label: "Profile", href: (username) => ROUTES.profile(username), icon: UserRoundedLinear },
 ];
 
-export function isNavActive(pathname: string, href: string): boolean {
-  return pathname === href || (href !== "/" && pathname.startsWith(`${href}/`));
+/** Matches the path, and any query parameters the nav link carries (e.g. a profile's ?name=). */
+export function isNavActive(pathname: string, search: URLSearchParams, href: string): boolean {
+  const [path, query] = href.split("?");
+  const pathMatches = pathname === path || (path !== "/" && pathname.startsWith(`${path}/`));
+  if (!pathMatches || !query) return pathMatches;
+  return [...new URLSearchParams(query).entries()].every(([key, value]) => search.get(key) === value);
 }

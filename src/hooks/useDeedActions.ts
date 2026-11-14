@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { toast } from "sonner";
 
-import { ROUTES } from "@/config/routes";
+import { absoluteUrl, ROUTES } from "@/config/routes";
 import { errorMessage } from "@/services";
 import { useDeedStore } from "@/store/deedStore";
 import type { Deed } from "@/types";
@@ -42,7 +42,7 @@ export function useDeedActions(deed: Deed) {
   };
 
   const share = async () => {
-    const url = `${window.location.origin}${ROUTES.deed(deed.id)}`;
+    const url = absoluteUrl(ROUTES.deed(deed.id));
     try {
       if (navigator.share && window.matchMedia("(pointer: coarse)").matches) {
         await navigator.share({ title: deed.title, text: `${deed.title} — on Good Deeds`, url });

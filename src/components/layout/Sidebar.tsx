@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { AddCircleLinear, MenuDotsLinear } from "solar-icon-set";
 
 import { Logo } from "@/components/common/Logo";
@@ -16,6 +16,7 @@ import { NotificationDot } from "./NotificationDot";
 
 export function Sidebar() {
   const pathname = usePathname();
+  const search = useSearchParams();
   const user = useCurrentUser();
   if (!user) return null;
 
@@ -26,7 +27,7 @@ export function Sidebar() {
       <nav aria-label="Main" className="flex flex-col gap-1">
         {NAV_ITEMS.filter((item) => item.key !== "create").map((item) => {
           const href = item.href(user.username);
-          const active = isNavActive(pathname, href);
+          const active = isNavActive(pathname, search, href);
           const Icon = item.icon;
           return (
             <Button key={item.key} asChild variant="nav" size="nav" data-active={active}>

@@ -1,8 +1,8 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { Suspense, useMemo, useState } from "react";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { GalleryAddLinear, UserCrossRoundedLinear } from "solar-icon-set";
 
 import { BackButton } from "@/components/common/BackButton";
@@ -20,10 +20,10 @@ import { useCurrentUserId } from "@/hooks/useCurrentUser";
 import { useProfile } from "@/hooks/useProfile";
 import { contributionSummary, monthlyActivity } from "@/lib/profile-story";
 
-export default function ProfilePage() {
-  const { username } = useParams<{ username: string }>();
+function Profile() {
+  const username = useSearchParams().get("name") ?? "";
   const viewerId = useCurrentUserId();
-  const profile = useProfile(decodeURIComponent(username));
+  const profile = useProfile(username);
   const [followTab, setFollowTab] = useState<FollowTab | null>(null);
 
   const monthly = useMemo(() => (profile.user ? monthlyActivity(profile.deeds) : []), [profile]);
@@ -84,5 +84,13 @@ export default function ProfilePage() {
 
       <FollowListDialog name={user.name} open={followTab} onOpenChange={setFollowTab} followers={followers} following={following} />
     </div>
+  );
+}
+
+export default function Page() {
+  return (
+    <Suspense>
+      <Profile />
+    </Suspense>
   );
 }

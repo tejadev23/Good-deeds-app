@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 
 import { useCurrentUser } from "@/hooks/useCurrentUser";
 import { cn } from "@/lib/utils";
@@ -13,6 +13,7 @@ const MOBILE_KEYS = ["feed", "discover", "create", "notifications", "profile"] a
 
 export function BottomNav() {
   const pathname = usePathname();
+  const search = useSearchParams();
   const user = useCurrentUser();
   if (!user) return null;
 
@@ -26,7 +27,7 @@ export function BottomNav() {
       <ul className="mx-auto flex h-16 max-w-md items-center justify-around px-2">
         {items.map((item) => {
           const href = item.href(user.username);
-          const active = isNavActive(pathname, href);
+          const active = isNavActive(pathname, search, href);
           const Icon = item.icon;
           const isCreate = item.key === "create";
           return (

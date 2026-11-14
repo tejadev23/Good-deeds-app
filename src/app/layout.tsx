@@ -11,7 +11,6 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: { default: "Good Deeds — Small actions. A better world.", template: "%s · Good Deeds" },
   description: "A positive social community where people share good actions, inspire others and create real impact.",
-  icons: { icon: "/icon.svg" },
 };
 
 export const viewport: Viewport = {

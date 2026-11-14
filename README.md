@@ -32,20 +32,33 @@ Requires Node 20.9+ and pnpm 10 (`corepack enable` gives you pnpm).
 
 The credentials are checked in the browser for demo purposes only. They are not real authentication. Use the account menu (sidebar on desktop, avatar on mobile) to switch persona, log out or **Reset demo data**.
 
-## Deploy to Vercel
+## Deploy for free on GitHub Pages
 
-1. Push this folder to a Git repository.
-2. In Vercel choose **Add New → Project**, import the repo and keep the detected **Next.js** preset. Vercel picks up pnpm from `pnpm-lock.yaml` automatically.
-3. Click **Deploy**. No environment variables are needed.
+This repo includes a GitHub Actions workflow (`.github/workflows/deploy-pages.yml`) that builds a static version of the app and publishes it on every push to `main`.
 
-Or from the CLI: `npx vercel` and then `npx vercel --prod`.
+1. Push this repo to GitHub.
+2. On GitHub, open **Settings → Pages**. Under **Build and deployment → Source**, choose **GitHub Actions**.
+3. Open the **Actions** tab. Re-run the "Deploy to GitHub Pages" workflow if it ran before Pages was enabled, or push any commit.
+4. The site goes live at `https://<your-username>.github.io/<repo-name>/`.
+
+To try the static build locally:
+
+```bash
+STATIC_EXPORT=true NEXT_PUBLIC_BASE_PATH=/Good-deeds-app pnpm build   # writes out/
+mkdir -p /tmp/site && cp -r out /tmp/site/Good-deeds-app && npx serve /tmp/site   # open /Good-deeds-app/
+```
+
+## Deploy to Vercel (alternative)
+
+Import the repo in Vercel and keep the detected **Next.js** preset. No environment variables are needed. Leave `STATIC_EXPORT` unset there.
 
 ## Structure
 
 ```
 src/
   app/            Routes (App Router). (app)/ holds the signed-in shell: feed, discover, create, challenges,
-                  help, notifications, saved, u/[username], deed/[id]
+                  help, notifications, saved, u (?name=), deed (?id=). Detail pages use query
+                  strings so the whole app can be exported as a static site.
   components/
     ui/           shadcn-style primitives (Radix + cva + Tailwind tokens)
     layout/       App shell, sidebar, bottom nav, right rail, account menu

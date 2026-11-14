@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 import { DEMO_ACCOUNTS, type DemoAccount } from "@/config/demo-accounts";
-import { ROUTES } from "@/config/routes";
+import { absoluteUrl, ROUTES } from "@/config/routes";
 import { errorMessage, services } from "@/services";
 import { useDeedStore } from "@/store/deedStore";
 import { useNotificationStore } from "@/store/notificationStore";
@@ -52,7 +52,7 @@ export function useAccountActions() {
     try {
       await services.demo.reset();
       // Hard reload so every store starts from the fresh seed.
-      window.location.assign(ROUTES.login);
+      window.location.assign(absoluteUrl(ROUTES.login));
     } catch (error) {
       toast.error(errorMessage(error));
       setBusy(false);

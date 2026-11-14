@@ -1,7 +1,8 @@
 "use client";
 
+import { Suspense } from "react";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { CalendarLinear, HandShakeLinear, MapPointLinear, UsersGroupRoundedLinear } from "solar-icon-set";
 
 import { BackButton } from "@/components/common/BackButton";
@@ -20,8 +21,8 @@ import { formatDate, formatRelativeTime } from "@/lib/format";
 import { neededByLabel } from "@/lib/help";
 import { useHelpStore } from "@/store/helpStore";
 
-export default function HelpRequestPage() {
-  const { id } = useParams<{ id: string }>();
+function HelpRequestDetail() {
+  const id = useSearchParams().get("id") ?? "";
   const viewerId = useCurrentUserId();
   const request = useHelpStore((s) => s.requests.find((r) => r.id === id));
   const status = useHelpStore((s) => s.status);
@@ -122,5 +123,13 @@ export default function HelpRequestPage() {
         </CardContent>
       </Card>
     </div>
+  );
+}
+
+export default function Page() {
+  return (
+    <Suspense>
+      <HelpRequestDetail />
+    </Suspense>
   );
 }

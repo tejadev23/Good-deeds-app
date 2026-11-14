@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, type ReactNode } from "react";
+import { Suspense, useEffect, type ReactNode } from "react";
 import { usePathname, useRouter } from "next/navigation";
 
 import { ErrorState } from "@/components/common/ErrorState";
@@ -14,7 +14,7 @@ import { RightRail } from "./RightRail";
 import { ShellSkeleton } from "./ShellSkeleton";
 import { Sidebar } from "./Sidebar";
 
-const WIDE_ROUTES = [ROUTES.discover, "/u/", ROUTES.challenges, ROUTES.help];
+const WIDE_ROUTES = [ROUTES.discover, "/u", ROUTES.challenges, ROUTES.help];
 
 export function AppShell({ children }: { children: ReactNode }) {
   const router = useRouter();
@@ -34,11 +34,13 @@ export function AppShell({ children }: { children: ReactNode }) {
   }
   if (!ready) return <ShellSkeleton />;
 
-  const wide = WIDE_ROUTES.some((route) => pathname.startsWith(route));
+  const wide = WIDE_ROUTES.some((route) => pathname === route || pathname.startsWith(`${route}/`));
 
   return (
     <div className="flex min-h-dvh">
-      <Sidebar />
+      <Suspense fallback={null}>
+        <Sidebar />
+      </Suspense>
       <div className="flex min-w-0 flex-1 flex-col">
         <MobileHeader />
         <div className="flex flex-1 justify-center gap-8 xl:gap-10">
@@ -51,7 +53,9 @@ export function AppShell({ children }: { children: ReactNode }) {
           {!wide && <RightRail />}
         </div>
       </div>
-      <BottomNav />
+      <Suspense fallback={null}>
+        <BottomNav />
+      </Suspense>
     </div>
   );
 }

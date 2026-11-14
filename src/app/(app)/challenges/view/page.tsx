@@ -1,8 +1,8 @@
 "use client";
 
-import { useMemo } from "react";
+import { Suspense, useMemo } from "react";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { AddCircleLinear, CalendarLinear, ClockCircleLinear, FlagLinear, LightbulbLinear } from "solar-icon-set";
 
 import { BackButton } from "@/components/common/BackButton";
@@ -22,8 +22,8 @@ import { challengeContributions, challengeTimeLabel } from "@/lib/challenges";
 import { formatDate } from "@/lib/format";
 import { useDeedStore } from "@/store/deedStore";
 
-export default function ChallengeDetailPage() {
-  const { id } = useParams<{ id: string }>();
+function ChallengeDetail() {
+  const id = useSearchParams().get("id") ?? "";
   const { all, status } = useChallenges();
   const deeds = useDeedStore((s) => s.deeds);
   const usersById = useUsersById();
@@ -120,5 +120,13 @@ export default function ChallengeDetailPage() {
         </section>
       </div>
     </div>
+  );
+}
+
+export default function Page() {
+  return (
+    <Suspense>
+      <ChallengeDetail />
+    </Suspense>
   );
 }
