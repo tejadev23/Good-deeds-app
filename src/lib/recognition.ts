@@ -12,16 +12,22 @@ const RULES: Record<BadgeId, Rule> = {
   "kindness-ambassador": (s) => s.totalDeeds >= 6 && Object.values(s.categoryBreakdown).filter((n) => n > 0).length >= 3,
   "generous-heart": (s) => s.categoryBreakdown.charity >= 2,
   "first-step": (s) => s.totalDeeds >= 1,
+  changemaker: (s) => s.challengesJoined >= 1,
+  "ripple-maker": (s) => s.ripplesInspired >= 2,
+  "helping-hand": (s) => s.helpOffered >= 1,
 };
 
 const PRIORITY: BadgeId[] = [
   "kindness-ambassador",
+  "ripple-maker",
   "nature-champion",
   "animal-friend",
   "community-helper",
   "education-supporter",
   "generous-heart",
   "environmental-advocate",
+  "helping-hand",
+  "changemaker",
   "first-step",
 ];
 

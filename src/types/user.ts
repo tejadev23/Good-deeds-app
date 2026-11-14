@@ -27,6 +27,10 @@ export interface UserStats {
   followers: number;
   following: number;
   categoryBreakdown: Record<DeedCategory, number>;
+  /** Deeds that were inspired by this user's deeds (direct ripples). */
+  ripplesInspired: number;
+  challengesJoined: number;
+  helpOffered: number;
 }
 
 export type BadgeId =
@@ -37,7 +41,10 @@ export type BadgeId =
   | "education-supporter"
   | "kindness-ambassador"
   | "generous-heart"
-  | "first-step";
+  | "first-step"
+  | "changemaker"
+  | "ripple-maker"
+  | "helping-hand";
 
 export interface RecognitionBadge {
   id: BadgeId;

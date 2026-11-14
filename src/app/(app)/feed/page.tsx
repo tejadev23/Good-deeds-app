@@ -3,7 +3,9 @@
 import { MagniferLinear, UsersGroupRoundedLinear } from "solar-icon-set";
 import Link from "next/link";
 
+import { ChallengeBanner } from "@/components/challenges/ChallengeBanner";
 import { EmptyState } from "@/components/common/EmptyState";
+import { HelpTeaser } from "@/components/help/HelpTeaser";
 import { ErrorState } from "@/components/common/ErrorState";
 import { ComposerPrompt } from "@/components/deeds/ComposerPrompt";
 import { FeedSkeleton } from "@/components/deeds/DeedCardSkeleton";
@@ -31,6 +33,8 @@ export default function FeedPage() {
 
       <ComposerPrompt user={user} />
 
+      {!isFiltered && filters.scope === "all" && <ChallengeBanner />}
+
       <FeedFilters
         category={filters.category}
         search={filters.search}
@@ -51,7 +55,11 @@ export default function FeedPage() {
         }}
         onRetry={() => void reload(user.id)}
       >
-        <DeedList deeds={items} resetKey={`${filters.category}|${filters.search}|${filters.scope}`} />
+        <DeedList
+          deeds={items}
+          resetKey={`${filters.category}|${filters.search}|${filters.scope}`}
+          insert={isFiltered ? undefined : { after: 3, node: <HelpTeaser /> }}
+        />
       </FeedBody>
     </div>
   );

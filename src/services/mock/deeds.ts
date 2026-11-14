@@ -36,9 +36,17 @@ export const mockDeedService: DeedService = {
       createdAt: new Date().toISOString(),
       likedBy: [],
       communityLikes: 0,
+      inspiredById: input.inspiredById,
+      challenge: input.challenge && input.challenge.amount > 0 ? input.challenge : undefined,
     };
     mutateDb((db) => {
       db.deeds.unshift(deed);
+      const origin = deed.inspiredById ? db.deeds.find((d) => d.id === deed.inspiredById) : undefined;
+      if (origin) {
+        pushNotification(db, { recipientId: origin.authorId, actorId: authorId, type: "ripple", deedId: deed.id, message: origin.title });
+      }
+      const challenge = deed.challenge ? db.challenges.find((c) => c.id === deed.challenge?.challengeId) : undefined;
+      if (challenge && !challenge.participantIds.includes(authorId)) challenge.participantIds.push(authorId);
     });
     return deed;
   },
@@ -48,7 +56,7 @@ export const mockDeedService: DeedService = {
     mutateDb((db) => {
       const deed = findDeed(db, deedId);
       if (deed.authorId !== userId) throw new ServiceError("You can only delete your own deeds.", "FORBIDDEN");
-      db.deeds = db.deeds.filter((d) => d.id !== deedId);
+      db.deeds = db.deeds.filter((d) => d.id !== deedId).map((d) => (d.inspiredById === deedId ? { ...d, inspiredById: undefined } : d));
       db.comments = db.comments.filter((c) => c.deedId !== deedId);
       removeNotifications(db, (n) => n.deedId === deedId);
       Object.keys(db.saves).forEach((uid) => {

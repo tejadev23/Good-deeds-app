@@ -1,4 +1,4 @@
-export type NotificationType = "like" | "comment" | "follow" | "community" | "milestone";
+export type NotificationType = "like" | "comment" | "follow" | "community" | "milestone" | "ripple" | "help" | "challenge";
 
 export interface AppNotification {
   id: string;
@@ -7,6 +7,8 @@ export interface AppNotification {
   type: NotificationType;
   deedId?: string;
   activityId?: string;
+  helpRequestId?: string;
+  challengeId?: string;
   message?: string;
   createdAt: string;
   read: boolean;

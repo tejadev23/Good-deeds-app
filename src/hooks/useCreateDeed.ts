@@ -1,13 +1,14 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 
 import { ROUTES } from "@/config/routes";
 import { prepareImage } from "@/lib/image";
 import { toDateInputValue } from "@/lib/format";
 import { errorMessage } from "@/services";
+import { useChallengeStore } from "@/store/challengeStore";
 import { useDeedStore } from "@/store/deedStore";
 import { useFeedStore } from "@/store/feedStore";
 import type { DeedCategory } from "@/types";
@@ -24,16 +25,22 @@ interface DeedFormValues {
   category: DeedCategory | "";
   activityDate: string;
   location: string;
+  inspiredById: string;
+  challengeId: string;
+  challengeAmount: string;
 }
 
 type FormErrors = Partial<Record<keyof DeedFormValues, string>>;
 
-const initialValues = (): DeedFormValues => ({
+const initialValues = (inspiredById = "", category: DeedCategory | "" = "", challengeId = ""): DeedFormValues => ({
   title: "",
   description: "",
-  category: "",
+  category,
   activityDate: toDateInputValue(),
   location: "",
+  inspiredById,
+  challengeId,
+  challengeAmount: "",
 });
 
 function validate(values: DeedFormValues): FormErrors {
@@ -43,6 +50,7 @@ function validate(values: DeedFormValues): FormErrors {
   if (!values.category) errors.category = "Pick the category that fits best.";
   if (!values.activityDate) errors.activityDate = "When did this happen?";
   else if (values.activityDate > toDateInputValue()) errors.activityDate = "The date can't be in the future.";
+  if (values.challengeId && !(Number(values.challengeAmount) > 0)) errors.challengeAmount = "How much did you add? Enter a number above zero.";
   return errors;
 }
 
@@ -51,7 +59,21 @@ export function useCreateDeed() {
   const viewerId = useCurrentUserId();
   const createDeed = useDeedStore((s) => s.createDeed);
   const resetFeedFilters = useFeedStore((s) => s.reset);
-  const [values, setValues] = useState<DeedFormValues>(initialValues);
+  const markJoined = useChallengeStore((s) => s.markJoined);
+  const searchParams = useSearchParams();
+  const deeds = useDeedStore((s) => s.deeds);
+  const challenges = useChallengeStore((s) => s.challenges);
+  const [values, setValues] = useState<DeedFormValues>(() =>
+    initialValues(searchParams.get("inspiredBy") ?? "", "", searchParams.get("challenge") ?? ""),
+  );
+
+  // Once data is available, default the category to the inspiring deed's or the challenge's.
+  const origin = deeds.find((d) => d.id === values.inspiredById);
+  const linkedChallenge = challenges.find((c) => c.id === values.challengeId);
+  const suggestedCategory = linkedChallenge?.category ?? origin?.category;
+  useEffect(() => {
+    if (suggestedCategory) setValues((prev) => (prev.category ? prev : { ...prev, category: suggestedCategory }));
+  }, [suggestedCategory]);
   const [images, setImages] = useState<string[]>([]);
   const [errors, setErrors] = useState<FormErrors>({});
   const [processingImages, setProcessingImages] = useState(false);
@@ -96,7 +118,10 @@ export function useCreateDeed() {
         activityDate: values.activityDate,
         location: values.location,
         images,
+        inspiredById: origin?.id,
+        challenge: linkedChallenge ? { challengeId: linkedChallenge.id, amount: Number(values.challengeAmount) } : undefined,
       });
+      if (linkedChallenge) markJoined(linkedChallenge.id, viewerId);
       resetFeedFilters();
       toast.success("Your good deed is live 🌱", { description: "Thank you for inspiring the community." });
       router.push(ROUTES.feed);

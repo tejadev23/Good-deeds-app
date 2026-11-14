@@ -1,6 +1,7 @@
 "use client";
 
-import { BookmarkLinear, ChatRoundLineLinear, HeartLinear, ShareLinear } from "solar-icon-set";
+import Link from "next/link";
+import { BookmarkLinear, ChatRoundLineLinear, HeartLinear, ShareLinear, StarRingsLinear } from "solar-icon-set";
 
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
@@ -16,9 +17,11 @@ type DeedActionsProps = {
   onComment: () => void;
   onShare: () => void;
   onSave: () => void;
+  /** Link to start a deed inspired by this one (hidden on your own deeds). */
+  inspireHref?: string;
 };
 
-export function DeedActions({ likes, comments, isLiked, isSaved, onLike, onComment, onShare, onSave }: DeedActionsProps) {
+export function DeedActions({ likes, comments, isLiked, isSaved, onLike, onComment, onShare, onSave, inspireHref }: DeedActionsProps) {
   return (
     <div className="flex items-center gap-1">
       <Button
@@ -44,6 +47,19 @@ export function DeedActions({ likes, comments, isLiked, isSaved, onLike, onComme
         </TooltipTrigger>
         <TooltipContent>Share</TooltipContent>
       </Tooltip>
+      {inspireHref && (
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button asChild variant="subtle" size="sm" className="px-3 text-cat-community hover:text-cat-community">
+              <Link href={inspireHref} aria-label="This inspired me — share a similar deed">
+                <StarRingsLinear size={20} />
+                <span className="hidden sm:inline">Inspired</span>
+              </Link>
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>This inspired me — do it too</TooltipContent>
+        </Tooltip>
+      )}
       <div className="flex-1" />
       <Tooltip>
         <TooltipTrigger asChild>

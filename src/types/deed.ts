@@ -16,6 +16,15 @@ export interface Deed {
   likedBy: string[];
   /** Likes from the wider community not represented as profiles in the demo. */
   communityLikes: number;
+  /** The deed that inspired this one (a "ripple"). */
+  inspiredById?: string;
+  /** Contribution towards a community challenge. */
+  challenge?: DeedChallengeContribution;
+}
+
+export interface DeedChallengeContribution {
+  challengeId: string;
+  amount: number;
 }
 
 export interface Comment {
@@ -33,6 +42,8 @@ export interface NewDeedInput {
   images: string[];
   activityDate: string;
   location?: string;
+  inspiredById?: string;
+  challenge?: DeedChallengeContribution;
 }
 
 export interface FeedQuery {

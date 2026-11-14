@@ -8,7 +8,10 @@ export function contributionSummary(user: User, stats: UserStats, isSelf: boolea
   if (stats.totalDeeds === 0) return `${isSelf ? "You haven't" : `${user.name.split(" ")[0]} hasn't`} shared a deed yet — every journey starts with one.`;
   const top = (Object.entries(stats.categoryBreakdown) as [DeedCategory, number][]).sort((a, b) => b[1] - a[1])[0];
   const focus = CATEGORY_META[top[0]].label.toLowerCase();
-  return `${first} shared ${stats.totalDeeds} good deed${stats.totalDeeds === 1 ? "" : "s"} since joining in ${formatMonthYear(user.joinedAt)}, with a heart for ${focus}.`;
+  const base = `${first} shared ${stats.totalDeeds} good deed${stats.totalDeeds === 1 ? "" : "s"} since joining in ${formatMonthYear(user.joinedAt)}, with a heart for ${focus}.`;
+  if (stats.ripplesInspired === 0) return base;
+  const who = isSelf ? "Your" : "Their";
+  return `${base} ${who} deeds have inspired ${stats.ripplesInspired} other${stats.ripplesInspired === 1 ? "" : "s"} to do the same 🌱`;
 }
 
 /** Deed counts for each of the last `months` calendar months, oldest first. */

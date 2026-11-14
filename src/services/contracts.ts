@@ -1,5 +1,8 @@
 import type {
   AppNotification,
+  Challenge,
+  HelpRequest,
+  NewHelpRequestInput,
   Comment,
   CommunityActivity,
   Deed,
@@ -49,6 +52,19 @@ export interface ActivityService {
   toggleJoin(activityId: string, userId: string): Promise<CommunityActivity>;
 }
 
+export interface ChallengeService {
+  list(): Promise<Challenge[]>;
+  setParticipation(challengeId: string, userId: string, join: boolean): Promise<Challenge>;
+}
+
+export interface HelpService {
+  list(): Promise<HelpRequest[]>;
+  create(authorId: string, input: NewHelpRequestInput): Promise<HelpRequest>;
+  offer(requestId: string, userId: string, message?: string): Promise<HelpRequest>;
+  withdraw(requestId: string, userId: string): Promise<HelpRequest>;
+  setFulfilled(requestId: string, userId: string, fulfilled: boolean): Promise<HelpRequest>;
+}
+
 export interface DemoService {
   /** Restores the original seeded community and clears the session. */
   reset(): Promise<void>;
@@ -60,5 +76,7 @@ export interface Services {
   deeds: DeedService;
   notifications: NotificationService;
   activities: ActivityService;
+  challenges: ChallengeService;
+  help: HelpService;
   demo: DemoService;
 }

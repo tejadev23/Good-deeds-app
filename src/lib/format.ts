@@ -44,3 +44,8 @@ export function pluralize(count: number, singular: string, plural = `${singular}
 export function toDateInputValue(date: Date = new Date()): string {
   return format(date, "yyyy-MM-dd");
 }
+
+/** Full number with thousands separators, e.g. 3,865. */
+export function formatNumber(value: number): string {
+  return new Intl.NumberFormat("en").format(value);
+}

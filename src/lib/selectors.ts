@@ -1,4 +1,14 @@
-import { DEED_CATEGORIES, type Deed, type DeedCategory, type FeedQuery, type Follow, type User, type UserStats } from "@/types";
+import {
+  DEED_CATEGORIES,
+  type Challenge,
+  type Deed,
+  type DeedCategory,
+  type FeedQuery,
+  type Follow,
+  type HelpRequest,
+  type User,
+  type UserStats,
+} from "@/types";
 
 const DAY = 24 * 60 * 60 * 1000;
 
@@ -39,8 +49,14 @@ export function filterDeeds(deeds: Deed[], usersById: Map<string, User>, query: 
   });
 }
 
-export function computeUserStats(userId: string, deeds: Deed[], follows: Follow[]): UserStats {
+export interface StatsContext {
+  challenges?: Challenge[];
+  helpRequests?: HelpRequest[];
+}
+
+export function computeUserStats(userId: string, deeds: Deed[], follows: Follow[], context: StatsContext = {}): UserStats {
   const own = deeds.filter((d) => d.authorId === userId);
+  const ownIds = new Set(own.map((d) => d.id));
   const categoryBreakdown = emptyBreakdown();
   own.forEach((d) => {
     categoryBreakdown[d.category] += 1;
@@ -51,6 +67,9 @@ export function computeUserStats(userId: string, deeds: Deed[], follows: Follow[
     followers: followerIds(follows, userId).size,
     following: followingIds(follows, userId).size,
     categoryBreakdown,
+    ripplesInspired: deeds.filter((d) => d.inspiredById && ownIds.has(d.inspiredById) && d.authorId !== userId).length,
+    challengesJoined: (context.challenges ?? []).filter((c) => c.participantIds.includes(userId)).length,
+    helpOffered: (context.helpRequests ?? []).filter((r) => r.offers.some((o) => o.userId === userId)).length,
   };
 }
 

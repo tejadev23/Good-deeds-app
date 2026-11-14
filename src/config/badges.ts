@@ -2,10 +2,13 @@ import type { ComponentType } from "react";
 import {
   BookLinear,
   GiftLinear,
+  FlagLinear,
   HandHeartLinear,
+  HandShakeLinear,
   HeartsLinear,
   LeafLinear,
   PawLinear,
+  StarRingsLinear,
   StarShineLinear,
   UsersGroupRoundedLinear,
 } from "solar-icon-set";
@@ -72,6 +75,27 @@ export const BADGES: Record<BadgeId, BadgeMeta> = {
     description: "Regularly donates food, clothes and essentials.",
     icon: GiftLinear,
     className: "bg-cat-charity-subtle text-cat-charity",
+  },
+  changemaker: {
+    id: "changemaker",
+    name: "Changemaker",
+    description: "Joined a community challenge and helped move the whole community forward.",
+    icon: FlagLinear,
+    className: "bg-cat-education-subtle text-cat-education",
+  },
+  "ripple-maker": {
+    id: "ripple-maker",
+    name: "Ripple Maker",
+    description: "Their deeds have inspired others to go and do good too.",
+    icon: StarRingsLinear,
+    className: "bg-cat-community-subtle text-cat-community",
+  },
+  "helping-hand": {
+    id: "helping-hand",
+    name: "Helping Hand",
+    description: "Answered a neighbour's call for help on the Help board.",
+    icon: HandShakeLinear,
+    className: "bg-cat-humanity-subtle text-cat-humanity",
   },
   "first-step": {
     id: "first-step",

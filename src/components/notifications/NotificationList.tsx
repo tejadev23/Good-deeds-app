@@ -5,7 +5,7 @@ import { BellOffLinear } from "solar-icon-set";
 import { EmptyState } from "@/components/common/EmptyState";
 import { Skeleton } from "@/components/ui/skeleton";
 import { notificationGroup } from "@/lib/notification-text";
-import type { AppNotification, Deed, User } from "@/types";
+import type { AppNotification, Challenge, Deed, HelpRequest, User } from "@/types";
 
 import { NotificationItem } from "./NotificationItem";
 
@@ -14,10 +14,12 @@ type Props = {
   loading: boolean;
   usersById: Map<string, User>;
   deedsById: Map<string, Deed>;
+  helpById: Map<string, HelpRequest>;
+  challengesById: Map<string, Challenge>;
   onOpen: (n: AppNotification) => void;
 };
 
-export function NotificationList({ items, loading, usersById, deedsById, onOpen }: Props) {
+export function NotificationList({ items, loading, usersById, deedsById, helpById, challengesById, onOpen }: Props) {
   if (loading) {
     return (
       <div className="space-y-3">
@@ -54,6 +56,8 @@ export function NotificationList({ items, loading, usersById, deedsById, onOpen 
                 notification={n}
                 actor={n.actorId ? usersById.get(n.actorId) : undefined}
                 deed={n.deedId ? deedsById.get(n.deedId) : undefined}
+                helpRequest={n.helpRequestId ? helpById.get(n.helpRequestId) : undefined}
+                challenge={n.challengeId ? challengesById.get(n.challengeId) : undefined}
                 onOpen={() => onOpen(n)}
               />
             ))}

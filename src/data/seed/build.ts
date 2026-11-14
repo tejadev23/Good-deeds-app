@@ -4,11 +4,14 @@ import type { MockDatabase } from "@/services/mock/schema";
 import type { AppNotification, Comment, CommunityActivity, Deed, Follow, User } from "@/types";
 
 import { SEED_ACTIVITIES } from "./activities";
+import { buildChallenges, buildExtraNotifications, buildHelpRequests } from "./build-extras";
+import { SEED_CHALLENGE_CONTRIBUTIONS } from "./challenges";
 import { COMMUNITY_DEEDS_A } from "./deeds-community-a";
 import { COMMUNITY_DEEDS_B } from "./deeds-community-b";
 import { PRIMARY_DEEDS } from "./deeds-primary";
 import { createRandom } from "./random";
 import { PRIMARY_FOLLOWERS, PRIMARY_FOLLOWING, PRIMARY_LIKES, PRIMARY_SAVES } from "./relations";
+import { SEED_RIPPLES } from "./ripples";
 import type { SeedDeed } from "./types";
 import { SEED_USERS } from "./users";
 
@@ -87,6 +90,7 @@ function buildDeedsAndComments(now: number): { deeds: Deed[]; comments: Comment[
     });
 
     const activity = new Date(created - (seed.activityLag ?? 0) * DAY);
+    const contribution = SEED_CHALLENGE_CONTRIBUTIONS[seed.id];
     return {
       id: seed.id,
       authorId: seed.authorId,
@@ -99,6 +103,8 @@ function buildDeedsAndComments(now: number): { deeds: Deed[]; comments: Comment[
       createdAt: iso(created),
       likedBy,
       communityLikes: Math.max(0, seed.likes - likedBy.length),
+      inspiredById: SEED_RIPPLES[seed.id],
+      challenge: contribution ? { challengeId: contribution[0], amount: contribution[1] } : undefined,
     } satisfies Deed;
   });
 
@@ -125,7 +131,7 @@ function buildActivities(now: number): CommunityActivity[] {
   });
 }
 
-function buildNotifications(now: number, deeds: Deed[], comments: Comment[], follows: Follow[]): AppNotification[] {
+function buildNotifications(now: number, deeds: Deed[], comments: Comment[], follows: Follow[], extra: AppNotification[]): AppNotification[] {
   const rand = createRandom("notifications");
   const all: AppNotification[] = [];
   const authorOf = new Map(deeds.map((d) => [d.id, d.authorId]));
@@ -156,7 +162,7 @@ function buildNotifications(now: number, deeds: Deed[], comments: Comment[], fol
 
   // Keep the most recent 45 per recipient; anything from the last ~36h starts unread.
   const byRecipient = new Map<string, AppNotification[]>();
-  [...all, ...extras].forEach((n) => byRecipient.set(n.recipientId, [...(byRecipient.get(n.recipientId) ?? []), n]));
+  [...all, ...extras, ...extra].forEach((n) => byRecipient.set(n.recipientId, [...(byRecipient.get(n.recipientId) ?? []), n]));
 
   return [...byRecipient.values()].flatMap((list) =>
     list
@@ -176,7 +182,9 @@ export function buildSeedDatabase(now: number = Date.now()): MockDatabase {
   const follows = buildFollows(now);
   const { deeds, comments } = buildDeedsAndComments(now);
   const activities = buildActivities(now);
-  const notifications = buildNotifications(now, deeds, comments, follows);
+  const challenges = buildChallenges(now);
+  const helpRequests = buildHelpRequests(now);
+  const notifications = buildNotifications(now, deeds, comments, follows, buildExtraNotifications(now, deeds, helpRequests, challenges));
 
   return {
     version: DB_VERSION,
@@ -187,6 +195,8 @@ export function buildSeedDatabase(now: number = Date.now()): MockDatabase {
     follows,
     notifications,
     activities,
+    challenges,
+    helpRequests,
     saves: { ...PRIMARY_SAVES },
   };
 }

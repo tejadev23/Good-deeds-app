@@ -9,6 +9,7 @@ import { EmptyState } from "@/components/common/EmptyState";
 import { CommentComposer } from "@/components/deeds/CommentComposer";
 import { CommentList } from "@/components/deeds/CommentList";
 import { DeedCard } from "@/components/deeds/DeedCard";
+import { RippleSection } from "@/components/ripples/RippleSection";
 import { FeedSkeleton } from "@/components/deeds/DeedCardSkeleton";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -54,6 +55,7 @@ export default function DeedDetailPage() {
         onCommentClick={() => document.getElementById("comment-composer")?.querySelector("input")?.focus()}
         onDeleted={() => router.replace(ROUTES.feed)}
       />
+      <RippleSection deed={deed} />
       <Card id="comments">
         <CardHeader>
           <CardTitle>

@@ -14,6 +14,8 @@ import { DESCRIPTION_LIMIT, MAX_IMAGES, TITLE_LIMIT, useCreateDeed } from "@/hoo
 import { toDateInputValue } from "@/lib/format";
 
 import { CategoryPicker } from "./CategoryPicker";
+import { ChallengeField } from "./ChallengeField";
+import { InspiredByPreview } from "./InspiredByPreview";
 import { FieldError } from "./FieldError";
 import { ImageUploader } from "./ImageUploader";
 
@@ -34,6 +36,8 @@ export function CreateDeedForm() {
       }}
       className="space-y-5"
     >
+      {values.inspiredById && <InspiredByPreview deedId={values.inspiredById} onRemove={() => form.setField("inspiredById", "")} />}
+
       <Card>
         <CardContent className="space-y-5 pt-5">
           <div className="space-y-2">
@@ -113,6 +117,18 @@ export function CreateDeedForm() {
             </Label>
             <Input id="location" value={values.location} onChange={(e) => form.setField("location", e.target.value)} placeholder="Neighbourhood, city" maxLength={60} />
           </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardContent className="pt-5">
+          <ChallengeField
+            challengeId={values.challengeId}
+            amount={values.challengeAmount}
+            amountError={errors.challengeAmount}
+            onChallenge={(id) => form.setField("challengeId", id)}
+            onAmount={(a) => form.setField("challengeAmount", a)}
+          />
         </CardContent>
       </Card>
 

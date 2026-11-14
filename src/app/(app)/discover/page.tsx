@@ -8,6 +8,7 @@ import { ActivityCard } from "@/components/discover/ActivityCard";
 import { CategoryTiles } from "@/components/discover/CategoryTiles";
 import { ContributorCard } from "@/components/discover/ContributorCard";
 import { PersonCard } from "@/components/discover/PersonCard";
+import { QuickLinks } from "@/components/discover/QuickLinks";
 import { SearchResults } from "@/components/discover/SearchResults";
 import { Section } from "@/components/discover/Section";
 import { TrendingDeedTile } from "@/components/discover/TrendingDeedTile";
@@ -54,6 +55,8 @@ export default function DiscoverPage() {
         <SearchResults query={deferred} people={results.people} deeds={results.deeds} />
       ) : (
         <>
+          <QuickLinks />
+
           <Section title="Featured contributors" description="Celebrating members who've been especially kind lately.">
             <div className="-mx-4 flex gap-3 overflow-x-auto px-4 pb-2 scrollbar-none sm:mx-0 sm:grid sm:grid-cols-2 sm:overflow-visible sm:px-0 lg:grid-cols-3">
               {contributors.map(({ user, count, badge }) => (

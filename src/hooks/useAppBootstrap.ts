@@ -3,6 +3,8 @@
 import { useEffect } from "react";
 
 import { useActivityStore } from "@/store/activityStore";
+import { useChallengeStore } from "@/store/challengeStore";
+import { useHelpStore } from "@/store/helpStore";
 import { useDeedStore } from "@/store/deedStore";
 import { useNotificationStore } from "@/store/notificationStore";
 import { useSessionStore } from "@/store/sessionStore";
@@ -15,6 +17,8 @@ export function useAppBootstrap() {
   const loadDeeds = useDeedStore((s) => s.load);
   const loadNotifications = useNotificationStore((s) => s.load);
   const loadActivities = useActivityStore((s) => s.load);
+  const loadChallenges = useChallengeStore((s) => s.load);
+  const loadHelp = useHelpStore((s) => s.load);
   const usersStatus = useUserStore((s) => s.status);
   const deedsStatus = useDeedStore((s) => s.status);
 
@@ -28,13 +32,14 @@ export function useAppBootstrap() {
     void loadDeeds(userId);
     void loadNotifications(userId);
     void loadActivities();
-  }, [userId, loadUsers, loadDeeds, loadNotifications, loadActivities]);
+    void loadChallenges();
+    void loadHelp();
+  }, [userId, loadUsers, loadDeeds, loadNotifications, loadActivities, loadChallenges, loadHelp]);
 
-  const dataReady = usersStatus === "ready" && (deedsStatus === "ready" || deedsStatus === "loading");
+  // Pages derive stats, badges and challenge totals from deeds, so wait for both.
   return {
     sessionStatus: status,
-    ready: status === "authenticated" && usersStatus === "ready",
-    dataReady,
+    ready: status === "authenticated" && usersStatus === "ready" && deedsStatus === "ready",
     failed: usersStatus === "error" || deedsStatus === "error",
   };
 }

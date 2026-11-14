@@ -4,6 +4,14 @@
 
 Every person, post and interaction in this app is fictional demo data. Nothing is sent to a server.
 
+## Features
+
+- **Feed:** deeds from the community, with category filters, search, a Following view, likes, comments, sharing and saving.
+- **Ripples:** "This inspired me" links a new deed to the one that inspired it. Each deed shows how far its kindness has spread, as a ripple tree.
+- **Community challenges:** shared goals such as "Hunger-Free Fortnight". Members join and log deeds that add to one collective total. There are no leaderboards.
+- **Help board:** people ask for a hand (volunteers, foster homes, donations), and others offer to help with a note. The person who asked marks the request as fulfilled.
+- **Profiles:** contribution stats, recognition badges, a category breakdown and deed history. Discover and Notifications pages are included too.
+
 ## Run locally
 
 ```bash
@@ -36,14 +44,15 @@ Or from the CLI: `npx vercel` and then `npx vercel --prod`.
 
 ```
 src/
-  app/            Routes (App Router). (app)/ holds the signed-in shell: feed, discover, create,
-                  notifications, saved, u/[username], deed/[id]
+  app/            Routes (App Router). (app)/ holds the signed-in shell: feed, discover, create, challenges,
+                  help, notifications, saved, u/[username], deed/[id]
   components/
     ui/           shadcn-style primitives (Radix + cva + Tailwind tokens)
     layout/       App shell, sidebar, bottom nav, right rail, account menu
-    deeds/ profile/ discover/ notifications/ auth/ common/
+    deeds/ ripples/ challenges/ help/ profile/ discover/ notifications/ auth/ common/
   config/         Categories, badges, routes, image catalogue, demo accounts
-  data/seed/      Fictional community: 26 people, 63 deeds, comments, follows, activities
+  data/seed/      Fictional community: 26 people, 63 deeds, comments, follows, activities,
+                  ripples, challenges and help requests
   services/       Service contracts + browser mock implementation (localStorage)
   store/          Zustand stores (session, users, deeds, notifications, activities, feed filters)
   hooks/          Business logic used by components

@@ -14,7 +14,7 @@ import { RightRail } from "./RightRail";
 import { ShellSkeleton } from "./ShellSkeleton";
 import { Sidebar } from "./Sidebar";
 
-const WIDE_ROUTES = [ROUTES.discover, "/u/"];
+const WIDE_ROUTES = [ROUTES.discover, "/u/", ROUTES.challenges, ROUTES.help];
 
 export function AppShell({ children }: { children: ReactNode }) {
   const router = useRouter();

@@ -8,4 +8,10 @@ export const ROUTES = {
   saved: "/saved",
   profile: (username: string) => `/u/${username}`,
   deed: (id: string) => `/deed/${id}`,
+  challenges: "/challenges",
+  challenge: (id: string) => `/challenges/${id}`,
+  help: "/help",
+  helpRequest: (id: string) => `/help/${id}`,
+  createInspiredBy: (deedId: string) => `/create?inspiredBy=${deedId}`,
+  createForChallenge: (challengeId: string) => `/create?challenge=${challengeId}`,
 } as const;

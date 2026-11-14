@@ -5,6 +5,8 @@ import { useMemo, useState } from "react";
 import { earnedBadges } from "@/lib/recognition";
 import { categoryTotals, computeUserStats, featuredContributors, matchesText, suggestedUsers, trendingDeeds } from "@/lib/selectors";
 import { useActivityStore } from "@/store/activityStore";
+import { useChallengeStore } from "@/store/challengeStore";
+import { useHelpStore } from "@/store/helpStore";
 import { useDeedStore } from "@/store/deedStore";
 import { useUserStore } from "@/store/userStore";
 
@@ -17,6 +19,8 @@ export function useDiscover(search: string) {
   const follows = useUserStore((s) => s.follows);
   const { deeds, comments, status } = useDeedStore();
   const activities = useActivityStore((s) => s.activities);
+  const challenges = useChallengeStore((s) => s.challenges);
+  const helpRequests = useHelpStore((s) => s.requests);
   const usersById = useUsersById();
   // Suggestions are computed from a per-viewer snapshot so a card doesn't vanish the moment you follow someone.
   const [snapshot, setSnapshot] = useState({ viewerId, follows });
@@ -35,10 +39,10 @@ export function useDiscover(search: string) {
       categories: categoryTotals(deeds),
       contributors: featuredContributors(users, deeds, 45, 6).map((c) => ({
         ...c,
-        badge: earnedBadges(computeUserStats(c.user.id, deeds, follows))[0],
+        badge: earnedBadges(computeUserStats(c.user.id, deeds, follows, { challenges, helpRequests }))[0],
       })),
     }),
-    [users, deeds, follows, snapshot.follows, viewerId, commentCounts],
+    [users, deeds, follows, snapshot.follows, viewerId, commentCounts, challenges, helpRequests],
   );
 
   const results = useMemo(() => {

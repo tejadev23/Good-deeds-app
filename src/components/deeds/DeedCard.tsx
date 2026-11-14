@@ -16,6 +16,11 @@ import { likeCount } from "@/lib/selectors";
 import { cn } from "@/lib/utils";
 import type { Deed } from "@/types";
 
+import { InspiredByLine } from "@/components/ripples/InspiredByLine";
+import { RippleChip } from "@/components/ripples/RippleChip";
+import { ChallengeTag } from "@/components/challenges/ChallengeTag";
+import { useRipple } from "@/hooks/useRipples";
+
 import { CommentsDialog } from "./CommentsDialog";
 import { DeedActions } from "./DeedActions";
 import { DeedGallery } from "./DeedGallery";
@@ -38,6 +43,7 @@ export function DeedCard({ deed, variant = "feed", onCommentClick, onDeleted }: 
   const actions = useDeedActions(deed);
   const [expanded, setExpanded] = useState(variant === "detail");
   const [commentsOpen, setCommentsOpen] = useState(false);
+  const ripple = useRipple(deed);
   const author = usersById.get(deed.authorId);
   if (!author) return null;
 
@@ -82,6 +88,7 @@ export function DeedCard({ deed, variant = "feed", onCommentClick, onDeleted }: 
 
       <div className="space-y-3 px-4 sm:px-5">
         <CategoryBadge category={deed.category} className="sm:hidden" />
+        {ripple.origin && <InspiredByLine origin={ripple.origin} author={usersById.get(ripple.origin.authorId)} />}
         {variant === "feed" ? (
           <Link href={ROUTES.deed(deed.id)} className="block">
             <h2 className="text-xl font-semibold leading-snug text-forest hover:underline">{deed.title}</h2>
@@ -109,6 +116,12 @@ export function DeedCard({ deed, variant = "feed", onCommentClick, onDeleted }: 
       )}
 
       <div className="space-y-3 px-4 pb-3 pt-4 sm:px-5">
+        {(ripple.reach > 0 || deed.challenge) && (
+          <div className="flex flex-wrap gap-2">
+            <RippleChip deedId={deed.id} reach={ripple.reach} />
+            {deed.challenge && <ChallengeTag contribution={deed.challenge} />}
+          </div>
+        )}
         <LikedBy likers={likers} total={likeCount(deed)} viewerLiked={actions.isLiked} />
         <div className="-mx-2 border-t border-border/70 pt-2">
           <DeedActions
@@ -120,6 +133,7 @@ export function DeedCard({ deed, variant = "feed", onCommentClick, onDeleted }: 
             onComment={() => (onCommentClick ? onCommentClick() : setCommentsOpen(true))}
             onShare={() => void actions.share()}
             onSave={() => void actions.toggleSave()}
+            inspireHref={actions.isOwner ? undefined : ROUTES.createInspiredBy(deed.id)}
           />
         </div>
       </div>

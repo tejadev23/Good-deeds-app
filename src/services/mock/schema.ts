@@ -1,4 +1,4 @@
-import type { AppNotification, Comment, CommunityActivity, Deed, Follow, User } from "@/types";
+import type { AppNotification, Challenge, Comment, CommunityActivity, Deed, Follow, HelpRequest, User } from "@/types";
 
 /** Shape of the browser-side mock database persisted to localStorage. */
 export interface MockDatabase {
@@ -10,5 +10,7 @@ export interface MockDatabase {
   follows: Follow[];
   notifications: AppNotification[];
   activities: CommunityActivity[];
+  challenges: Challenge[];
+  helpRequests: HelpRequest[];
   saves: Record<string, string[]>;
 }
