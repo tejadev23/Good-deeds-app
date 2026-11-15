@@ -12,7 +12,6 @@ import type { DeedCategory } from "@/types";
 export function CategoryTiles({ totals }: { totals: Record<DeedCategory, number> }) {
   const router = useRouter();
   const setCategory = useFeedStore((s) => s.setCategory);
-  const setSearch = useFeedStore((s) => s.setSearch);
   const ranked = [...CATEGORY_LIST].sort((a, b) => totals[b.id] - totals[a.id]);
 
   return (
@@ -23,7 +22,6 @@ export function CategoryTiles({ totals }: { totals: Record<DeedCategory, number>
           variant="bare"
           size="bare"
           onClick={() => {
-            setSearch("");
             setCategory(id);
             router.push(ROUTES.feed);
           }}

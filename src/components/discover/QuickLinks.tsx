@@ -1,16 +1,15 @@
 import Link from "next/link";
-import { AltArrowRightLinear, FlagLinear, HandShakeLinear } from "solar-icon-set";
+import { AltArrowRightLinear, HandShakeLinear } from "solar-icon-set";
 
 import { ROUTES } from "@/config/routes";
 
 const LINKS = [
-  { href: ROUTES.challenges, title: "Community challenges", text: "Shared goals we reach together", icon: FlagLinear, className: "bg-cat-education-subtle text-cat-education" },
-  { href: ROUTES.help, title: "Help board", text: "Neighbours asking for a hand", icon: HandShakeLinear, className: "bg-cat-humanity-subtle text-cat-humanity" },
+  { href: ROUTES.help, title: "Help board", text: "Neighbours asking for a hand — offer yours, or ask for one", icon: HandShakeLinear, className: "bg-cat-humanity-subtle text-cat-humanity" },
 ];
 
 export function QuickLinks() {
   return (
-    <div className="grid gap-3 sm:grid-cols-2">
+    <div className="grid gap-3">
       {LINKS.map(({ href, title, text, icon: Icon, className }) => (
         <Link key={href} href={href} className="group flex items-center gap-3 rounded-3xl border border-border/80 bg-card p-4 shadow-soft transition-shadow hover:shadow-lift">
           <span className={`flex size-12 items-center justify-center rounded-2xl ${className}`}>

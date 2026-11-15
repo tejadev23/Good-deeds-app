@@ -6,7 +6,8 @@ Every person, post and interaction in this app is fictional demo data. Nothing i
 
 ## Features
 
-- **Feed:** deeds from the community, with category filters, search, a Following view, likes, comments, sharing and saving.
+- **Feed:** the latest deeds first, with category filters, a Following view, likes, comments, sharing and saving.
+- **Discover:** search for people and deeds, active challenges, featured contributors, trending deeds, activities and people to follow.
 - **Ripples:** "This inspired me" links a new deed to the one that inspired it. Each deed shows how far its kindness has spread, as a ripple tree.
 - **Community challenges:** shared goals such as "Hunger-Free Fortnight". Members join and log deeds that add to one collective total. There are no leaderboards.
 - **Help board:** people ask for a hand (volunteers, foster homes, donations), and others offer to help with a note. The person who asked marks the request as fulfilled.

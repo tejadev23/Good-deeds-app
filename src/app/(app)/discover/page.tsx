@@ -3,6 +3,7 @@
 import { useDeferredValue, useMemo, useState } from "react";
 import { CloseCircleLinear, MagniferLinear } from "solar-icon-set";
 
+import { ChallengeBanner } from "@/components/challenges/ChallengeBanner";
 import { PageHeader } from "@/components/common/PageHeader";
 import { ActivityCard } from "@/components/discover/ActivityCard";
 import { CategoryTiles } from "@/components/discover/CategoryTiles";
@@ -55,6 +56,8 @@ export default function DiscoverPage() {
         <SearchResults query={deferred} people={results.people} deeds={results.deeds} />
       ) : (
         <>
+          <ChallengeBanner />
+
           <QuickLinks />
 
           <Section title="Featured contributors" description="Celebrating members who've been especially kind lately.">

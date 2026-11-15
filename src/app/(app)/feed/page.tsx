@@ -3,7 +3,6 @@
 import { MagniferLinear, UsersGroupRoundedLinear } from "solar-icon-set";
 import Link from "next/link";
 
-import { ChallengeBanner } from "@/components/challenges/ChallengeBanner";
 import { EmptyState } from "@/components/common/EmptyState";
 import { HelpTeaser } from "@/components/help/HelpTeaser";
 import { ErrorState } from "@/components/common/ErrorState";
@@ -33,14 +32,10 @@ export default function FeedPage() {
 
       <ComposerPrompt user={user} />
 
-      {!isFiltered && filters.scope === "all" && <ChallengeBanner />}
-
       <FeedFilters
         category={filters.category}
-        search={filters.search}
         scope={filters.scope}
         onCategory={filters.setCategory}
-        onSearch={filters.setSearch}
         onScope={filters.setScope}
       />
 
@@ -49,15 +44,12 @@ export default function FeedPage() {
         count={items.length}
         isFiltered={isFiltered}
         scope={filters.scope}
-        onReset={() => {
-          filters.setCategory("all");
-          filters.setSearch("");
-        }}
+        onReset={() => filters.setCategory("all")}
         onRetry={() => void reload(user.id)}
       >
         <DeedList
           deeds={items}
-          resetKey={`${filters.category}|${filters.search}|${filters.scope}`}
+          resetKey={`${filters.category}|${filters.scope}`}
           insert={isFiltered ? undefined : { after: 3, node: <HelpTeaser /> }}
         />
       </FeedBody>
@@ -96,8 +88,8 @@ function FeedBody({ status, count, isFiltered, scope, onReset, onRetry, children
   return (
     <EmptyState
       icon={MagniferLinear}
-      title="No deeds match that"
-      description="Try another category or a different search — or share the first one yourself."
+      title="No deeds here yet"
+      description="Try another category — or share the first one yourself."
       action={
         <Button variant="outline" size="sm" onClick={onReset}>
           Clear filters

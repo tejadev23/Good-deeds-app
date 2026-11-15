@@ -21,11 +21,11 @@ export function useFeed() {
 
   const items = useMemo(
     () =>
-      filterDeeds(deeds, usersById, { category: filters.category, search: filters.search, scope: filters.scope }, new Set([...following, viewerId ?? ""])),
-    [deeds, usersById, filters.category, filters.search, filters.scope, following, viewerId],
+      filterDeeds(deeds, usersById, { category: filters.category, scope: filters.scope }, new Set([...following, viewerId ?? ""])),
+    [deeds, usersById, filters.category, filters.scope, following, viewerId],
   );
 
-  const isFiltered = filters.category !== "all" || filters.search.trim() !== "";
+  const isFiltered = filters.category !== "all";
 
   return { items, status, filters, isFiltered };
 }
